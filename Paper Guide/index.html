@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper Guide - 论文导读</title>
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/paper-guide.css">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Showdown.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+    <!-- 代码高亮 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- MathJax 数学公式渲染 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            },
+            startup: {
+                ready: () => {
+                    MathJax.startup.defaultReady();
+                    MathJax.startup.promise.then(() => {
+                        console.log('MathJax is ready');
+                    });
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部工具栏 -->
+            <header class="toolbar">
+                <h1 class="site-title">
+                    <span class="site-icon"></span>
+                    <span class="site-name">文摘系列 - 论文导读</span>
+                </h1>
+                <div class="toolbar-actions">
+                    <button class="theme-toggle" id="theme-toggle" title="切换主题">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 阅读进度条 -->
+            <div class="progress-bar" id="progress-bar"></div>
+
+            <!-- 内容容器 -->
+            <div class="content-wrapper">
+                <!-- 编者按（横跨整个宽度） -->
+                <div class="editor-note" id="editor-note" style="display: none;">
+                    <div class="editor-note-header">
+                        <i class="fa-solid fa-pen-fancy"></i>
+                        <span>编者按</span>
+                    </div>
+                    <div class="editor-note-content" id="editor-note-content"></div>
+                </div>
+
+                <!-- 主内容区域（论文 + 目录） -->
+                <div class="content-row">
+                    <div class="main-area">
+                        <!-- 论文元信息 -->
+                        <div class="paper-meta" id="paper-meta" style="display: none;">
+                            <h1 class="paper-title" id="meta-title"></h1>
+                            <div class="paper-authors" id="meta-authors"></div>
+                            <div class="paper-info">
+                                <span class="paper-date" id="meta-date"></span>
+                                <span class="paper-venue" id="meta-venue"></span>
+                            </div>
+                            <div class="paper-tags" id="meta-tags"></div>
+                            <div class="paper-links" id="meta-links"></div>
+                        </div>
+
+                        <!-- Markdown 内容 -->
+                        <article class="markdown-body" id="markdown-content">
+                            <div class="welcome-screen">
+                                <h2>欢迎使用 Paper Guide</h2>
+                                <p>请在 URL 中指定论文文件名，例如：<code>#/paper/example-paper</code></p>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- 目录导航 -->
+                    <nav class="toc-nav" id="toc-nav">
+                        <ul id="toc-list"></ul>
+                    </nav>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 核心脚本 -->
+    <script src="js/paper-guide.js"></script>
+</body>
+</html>

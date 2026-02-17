@@ -1,0 +1,17 @@
+name: Trigger Sync with Excursion Studio
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  trigger-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger repository dispatch
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          repository: Excursion-Studio/excursion-studio.github.io
+          event-type: digests-updated
