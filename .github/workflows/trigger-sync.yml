@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+      - master
+  workflow_dispatch:
 
 jobs:
   trigger-sync:
@@ -15,3 +17,4 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
           repository: Excursion-Studio/excursion-studio.github.io
           event-type: digests-updated
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
