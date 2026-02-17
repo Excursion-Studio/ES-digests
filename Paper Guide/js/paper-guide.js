@@ -128,12 +128,20 @@ class PaperGuide {
     // 加载论文
     async loadPaper(filename) {
         try {
-            const response = await fetch(`papers/${filename}/${filename}.md`);
+            // 确保路径大小写正确
+            const normalizedFilename = filename.toLowerCase();
+            const url = `papers/${normalizedFilename}/${normalizedFilename}.md`;
+            console.log('尝试加载论文:', url);
+            
+            const response = await fetch(url);
+            console.log('响应状态:', response.status);
+            
             if (!response.ok) {
-                throw new Error(`无法加载论文: ${filename}`);
+                throw new Error(`无法加载论文: ${filename} (状态码: ${response.status})`);
             }
 
             const markdown = await response.text();
+            console.log('论文加载成功，长度:', markdown.length);
             this.renderPaper(markdown, filename);
         } catch (error) {
             console.error('加载论文失败:', error);
