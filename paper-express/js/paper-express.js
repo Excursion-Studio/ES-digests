@@ -96,9 +96,6 @@ class PaperExpress {
 
     // 绑定事件
     bindEvents() {
-        // 路由变化监听
-        window.addEventListener('hashchange', () => this.handleRoute());
-
         // 主题切换
         const themeToggle = document.getElementById('theme-toggle');
         if (themeToggle) {
@@ -112,17 +109,34 @@ class PaperExpress {
         });
     }
 
-    // 处理路由
+    // 处理路由 - 使用查询参数替代哈希路由
     handleRoute() {
-        const hash = window.location.hash;
-        const match = hash.match(/^#\/paper\/(.+)$/);
+        const urlParams = new URLSearchParams(window.location.search);
+        const paper = urlParams.get('paper');
 
-        if (match) {
-            const filename = match[1];
-            this.loadPaper(filename);
+        if (paper) {
+            this.loadPaper(paper);
         } else {
             this.showWelcome();
         }
+    }
+
+    // 获取基础路径 - 基于当前脚本位置计算，确保与部署路径一致
+    getBasePath() {
+        // 尝试从当前脚本路径推断基础路径
+        const scripts = document.querySelectorAll('script');
+        for (const script of scripts) {
+            const src = script.src;
+            if (src && src.includes('paper-express.js')) {
+                // 从脚本路径提取基础路径
+                // 例如: https://example.com/ES-digests/paper-express/js/paper-express.js
+                // 返回: https://example.com/ES-digests/paper-express/
+                const baseUrl = src.substring(0, src.indexOf('js/paper-express.js'));
+                return baseUrl;
+            }
+        }
+        // 回退方案：使用相对路径
+        return './';
     }
 
     // 加载论文
@@ -130,9 +144,11 @@ class PaperExpress {
         try {
             // 确保路径大小写正确
             const normalizedFilename = filename.toLowerCase();
-            // 使用相对于当前页面路径的 URL
-            const basePath = window.location.pathname.replace(/\/[^\/]*$/, '/');
+            // 使用基于脚本路径的基础路径
+            const basePath = this.getBasePath();
             const url = `${basePath}papers/${normalizedFilename}/${normalizedFilename}.md`;
+            
+            console.log('基础路径:', basePath);
             console.log('尝试加载论文:', url);
             
             const response = await fetch(url);
@@ -444,7 +460,7 @@ class PaperExpress {
         document.getElementById('markdown-content').innerHTML = `
             <div class="welcome-screen">
                 <h2>欢迎使用 Paper Express</h2>
-                <p>请在 URL 中指定论文文件名，例如：<code>#/paper/example-paper</code></p>
+                <p>请在 URL 中指定论文文件名，例如：<code>?paper=example-paper</code></p>
             </div>
         `;
         document.getElementById('toc-nav').style.display = 'none';
