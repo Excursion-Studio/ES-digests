@@ -631,4 +631,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('dark-theme');
         document.getElementById('theme-toggle').innerHTML = '<i class="fa-solid fa-sun"></i>';
     }
+    
+    // 隐藏预加载屏幕
+    setTimeout(() => {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+            loadingScreen.classList.add('hidden');
+        }
+    }, 500);
 });
