@@ -121,21 +121,10 @@ class PaperExpress {
         }
     }
 
-    // 获取基础路径 - 基于当前脚本位置计算，确保与部署路径一致
+    // 获取基础路径 - 使用相对于当前页面的路径
     getBasePath() {
-        // 尝试从当前脚本路径推断基础路径
-        const scripts = document.querySelectorAll('script');
-        for (const script of scripts) {
-            const src = script.src;
-            if (src && src.includes('paper-express.js')) {
-                // 从脚本路径提取基础路径
-                // 例如: https://example.com/ES-digests/paper-express/js/paper-express.js
-                // 返回: https://example.com/ES-digests/paper-express/
-                const baseUrl = src.substring(0, src.indexOf('js/paper-express.js'));
-                return baseUrl;
-            }
-        }
-        // 回退方案：使用相对路径
+        // 论文文件相对于页面 URL 的位置
+        // 页面在 paper-express/ 目录，论文文件在 paper-express/papers/ 目录
         return './';
     }
 
@@ -144,11 +133,12 @@ class PaperExpress {
         try {
             // 确保路径大小写正确
             const normalizedFilename = filename.toLowerCase();
-            // 使用基于脚本路径的基础路径
+            // 使用相对于页面 URL 的路径
             const basePath = this.getBasePath();
             const url = `${basePath}papers/${normalizedFilename}/${normalizedFilename}.md`;
             
-            console.log('基础路径:', basePath);
+            console.log('页面路径:', window.location.href);
+            console.log('请求路径:', url);
             console.log('尝试加载论文:', url);
             
             const response = await fetch(url);
