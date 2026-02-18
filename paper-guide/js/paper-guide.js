@@ -121,10 +121,9 @@ class PaperGuide {
         }
     }
 
-    // 获取基础路径 - 使用相对于当前页面的路径
+    // 获取基础路径 - 使用相对路径
     getBasePath() {
         // 论文文件相对于页面 URL 的位置
-        // 页面在 paper-guide/ 目录，论文文件在 paper-guide/papers/ 目录
         return './';
     }
 
@@ -133,7 +132,7 @@ class PaperGuide {
         try {
             // 确保路径大小写正确
             const normalizedFilename = filename.toLowerCase();
-            // 使用相对于页面 URL 的路径
+            // 使用相对路径
             const basePath = this.getBasePath();
             const url = `${basePath}papers/${normalizedFilename}/${normalizedFilename}.md`;
             
