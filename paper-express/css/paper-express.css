@@ -458,15 +458,70 @@
     color: #ef4444;
 }
 
+/* 暗色主题下的 Markdown 蓝色元素反色 */
+.dark-theme .markdown-body .anchor::before {
+    color: #93c5fd;
+}
+
+.dark-theme .markdown-body blockquote {
+    border-left: 4px solid #93c5fd;
+}
+
+.dark-theme .markdown-body code {
+    color: #93c5fd;
+    background: rgba(147, 197, 253, 0.1);
+}
+
+.dark-theme .markdown-body a {
+    color: #93c5fd;
+}
+
+.dark-theme .markdown-body a:hover {
+    border-bottom-color: #93c5fd;
+}
+
+.dark-theme .markdown-body tr:hover {
+    background: rgba(147, 197, 253, 0.05);
+}
+
+.dark-theme .markdown-body .abstract {
+    background: linear-gradient(135deg, rgba(147, 197, 253, 0.1) 0%, rgba(147, 197, 253, 0.05) 100%);
+    border: 1px solid rgba(147, 197, 253, 0.3);
+}
+
+.dark-theme .markdown-body .abstract-title {
+    color: #93c5fd;
+}
+
+.dark-theme .markdown-body .note {
+    background: rgba(147, 197, 253, 0.1);
+    border-left-color: #93c5fd;
+}
+
 /* 暗色主题下的标注样式 */
 .dark-theme .paper-note {
-    background: rgba(37, 99, 235, 0.2);
+    color: #93c5fd;
+    border-bottom: 1px dashed #93c5fd;
 }
 
 .dark-theme .paper-note:hover {
-    background: rgba(37, 99, 235, 0.3);
+    border-bottom-color: #93c5fd;
+}
+
+.dark-theme .paper-note.expanded {
+    border-bottom-color: #93c5fd;
 }
 
 .dark-theme .paper-note-expand {
-    background: rgba(37, 99, 235, 0.1);
+    background: linear-gradient(135deg, rgba(147, 197, 253, 0.1) 0%, rgba(147, 197, 253, 0.05) 100%);
+    border: 1px solid rgba(147, 197, 253, 0.3);
+    border-left: 4px solid #93c5fd;
+}
+
+.dark-theme .paper-note-title {
+    color: #93c5fd;
+}
+
+.dark-theme .paper-note-close:hover {
+    color: #93c5fd;
 }

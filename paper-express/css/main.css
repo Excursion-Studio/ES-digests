@@ -131,6 +131,59 @@ body {
     background-clip: text;
 }
 
+/* 暗色主题下其他蓝色元素反色 */
+.dark-theme .digest-info {
+    border-bottom-color: var(--border-color);
+}
+
+.dark-theme .digest-info i {
+    color: #93c5fd;
+}
+
+.dark-theme .progress-bar {
+    background: #93c5fd;
+}
+
+.dark-theme .editor-note {
+    background: linear-gradient(135deg, rgba(147, 197, 253, 0.1) 0%, rgba(147, 197, 253, 0.05) 100%);
+    border: 1px solid rgba(147, 197, 253, 0.3);
+    border-left: 4px solid #93c5fd;
+}
+
+.dark-theme .editor-note-header {
+    color: #93c5fd;
+}
+
+.dark-theme .tag {
+    background: rgba(147, 197, 253, 0.1);
+    color: #93c5fd;
+}
+
+.dark-theme .link-btn {
+    background: #3b82f6;
+    color: white;
+}
+
+.dark-theme .link-btn:hover {
+    background: #2563eb;
+}
+
+.dark-theme .toc-nav a:hover {
+    color: #93c5fd;
+    border-left-color: #93c5fd;
+}
+
+.dark-theme .toc-nav a.active {
+    color: #93c5fd;
+    border-left-color: #93c5fd;
+    background: rgba(147, 197, 253, 0.1);
+}
+
+.dark-theme .welcome-screen code {
+    background: rgba(147, 197, 253, 0.1);
+    color: #93c5fd;
+}
+
 /* 进度条 */
 .progress-bar {
     position: fixed;
@@ -218,6 +271,22 @@ body {
     margin-bottom: 24px;
     box-shadow: var(--shadow);
     scroll-margin-top: 80px;
+}
+
+.digest-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.digest-info i {
+    font-size: 1rem;
+    color: var(--primary-color);
 }
 
 .paper-title {

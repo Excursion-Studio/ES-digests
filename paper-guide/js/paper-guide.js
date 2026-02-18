@@ -385,12 +385,18 @@ class PaperGuide {
             authorsEl.innerHTML = '';
         }
 
-        // 日期和发表 venue
+        // 显示文摘发布时间（在标题上方）
+        const digestInfoEl = document.getElementById('digest-info');
+        const digestTimeEl = document.getElementById('meta-digest-time');
         if (metadata.digest_pub_time) {
-            document.getElementById('meta-date').textContent = metadata.digest_pub_time || '';
+            digestInfoEl.style.display = 'flex';
+            digestTimeEl.textContent = metadata.digest_pub_time;
         } else {
-            document.getElementById('meta-date').textContent = metadata.date || '';
+            digestInfoEl.style.display = 'none';
         }
+
+        // 显示论文发布时间和发表 venue
+        document.getElementById('meta-date').textContent = metadata.date || '';
         document.getElementById('meta-venue').textContent = metadata.venue || '';
 
         // 标签
@@ -412,7 +418,8 @@ class PaperGuide {
             linksHtml += `<a href="${metadata.code_url}" target="_blank" class="link-btn">💻 Code</a>`;
         }
         linksEl.innerHTML = linksHtml;
-        linksEl.style.display = linksHtml ? 'block' : 'none';
+        linksEl.style.display = linksHtml ? 'flex' : 'none';
+        linksEl.style.gap = '16px';
     }
 
     // 生成目录
