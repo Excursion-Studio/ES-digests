@@ -1,8 +1,8 @@
 /**
- * Paper Express - 论文速递模块核心逻辑
+ * Paper Guide - 论文导读模块核心逻辑
  */
 
-class PaperExpress {
+class PaperGuide {
     constructor() {
         this.converter = null;
         this.currentPaper = null;
@@ -130,7 +130,9 @@ class PaperExpress {
         try {
             // 确保路径大小写正确
             const normalizedFilename = filename.toLowerCase();
-            const url = `papers/${normalizedFilename}/${normalizedFilename}.md`;
+            // 使用相对于当前页面路径的 URL
+            const basePath = window.location.pathname.replace(/\/[^\/]*$/, '/');
+            const url = `${basePath}papers/${normalizedFilename}/${normalizedFilename}.md`;
             console.log('尝试加载论文:', url);
             
             const response = await fetch(url);
@@ -218,8 +220,8 @@ class PaperExpress {
 
         // 更新页面标题
         document.title = metadata.title 
-            ? `${metadata.title} - Paper Express` 
-            : 'Paper Express - 论文速递';
+            ? `${metadata.title} - Paper Guide` 
+            : 'Paper Guide - 论文导读';
     }
 
     // 渲染编者按
@@ -266,7 +268,11 @@ class PaperExpress {
         }
 
         // 日期和发表 venue
-        document.getElementById('meta-date').textContent = metadata.date || '';
+        if (metadata.digest_pub_time) {
+            document.getElementById('meta-date').textContent = metadata.digest_pub_time || '';
+        } else {
+            document.getElementById('meta-date').textContent = metadata.date || '';
+        }
         document.getElementById('meta-venue').textContent = metadata.venue || '';
 
         // 标签
@@ -441,12 +447,12 @@ class PaperExpress {
         document.getElementById('paper-meta').style.display = 'none';
         document.getElementById('markdown-content').innerHTML = `
             <div class="welcome-screen">
-                <h2>欢迎使用 Paper Express</h2>
+                <h2>欢迎使用 Paper Guide</h2>
                 <p>请在 URL 中指定论文文件名，例如：<code>#/paper/example-paper</code></p>
             </div>
         `;
         document.getElementById('toc-nav').style.display = 'none';
-        document.title = 'Paper Express - 论文速递';
+        document.title = 'Paper Guide - 论文导读';
     }
 
     // 显示错误
@@ -492,7 +498,7 @@ class PaperExpress {
 
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
-    window.paperExpress = new PaperExpress();
+    window.paperGuide = new PaperGuide();
     
     // 恢复主题设置
     const savedTheme = localStorage.getItem('theme');
