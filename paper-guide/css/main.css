@@ -121,7 +121,7 @@ body {
 
 /* 暗色主题下 logo 和 title 反色 */
 .dark-theme .site-icon {
-    filter: invert(1) brightness(2);
+    filter: invert(1) grayscale(1) brightness(2) contrast(10);
 }
 
 .dark-theme .site-name {
