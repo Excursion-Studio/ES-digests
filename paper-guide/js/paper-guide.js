@@ -197,6 +197,8 @@ class PaperGuide {
     renderPaper(markdown, filename) {
         const { metadata, content } = this.parseFrontMatter(markdown);
         this.currentPaper = { filename, metadata };
+        
+        this.noteCache = {};
 
         // 渲染编者按
         this.renderEditorNote(metadata);
@@ -208,6 +210,9 @@ class PaperGuide {
         const html = this.converter.makeHtml(content);
         const contentEl = document.getElementById('markdown-content');
         contentEl.innerHTML = html;
+
+        // 解析并渲染标注
+        this.parseAndRenderNotes(contentEl);
 
         // 代码高亮
         contentEl.querySelectorAll('pre code').forEach((block) => {
@@ -227,6 +232,114 @@ class PaperGuide {
         document.title = metadata.title 
             ? `${metadata.title} - Paper Guide` 
             : 'Paper Guide - 论文导读';
+    }
+
+    // 解析并渲染标注
+    parseAndRenderNotes(contentEl) {
+        const noteRegex = /\{\{note:([^|]+)\|([^}]+)\}\}/g;
+        
+        const walkNodes = (node) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                let text = node.textContent;
+                if (noteRegex.test(text)) {
+                    const span = document.createElement('span');
+                    span.innerHTML = text.replace(noteRegex, (match, filename, displayText) => {
+                        const noteId = `note-${filename}-${Math.random().toString(36).substr(2, 9)}`;
+                        return `<span class="paper-note" data-note-file="${filename}" data-note-id="${noteId}">${displayText}</span>`;
+                    });
+                    node.parentNode.replaceChild(span, node);
+                }
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                if (node.tagName !== 'CODE' && node.tagName !== 'PRE') {
+                    Array.from(node.childNodes).forEach(walkNodes);
+                }
+            }
+        };
+        
+        walkNodes(contentEl);
+        
+        contentEl.querySelectorAll('.paper-note').forEach(noteEl => {
+            noteEl.addEventListener('click', (e) => this.toggleNote(e.target));
+        });
+    }
+
+    // 切换标注展开/收起
+    async toggleNote(noteEl) {
+        const noteId = noteEl.dataset.noteId;
+        const noteFile = noteEl.dataset.noteFile;
+        
+        let expandEl = document.getElementById(noteId);
+        
+        if (expandEl) {
+            if (expandEl.style.display === 'none') {
+                expandEl.style.display = 'block';
+                noteEl.classList.add('expanded');
+            } else {
+                expandEl.style.display = 'none';
+                noteEl.classList.remove('expanded');
+            }
+            return;
+        }
+        
+        noteEl.classList.add('loading');
+        
+        try {
+            let noteContent;
+            if (this.noteCache[noteFile]) {
+                noteContent = this.noteCache[noteFile];
+            } else {
+                noteContent = await this.loadNoteFile(noteFile);
+                this.noteCache[noteFile] = noteContent;
+            }
+            
+            expandEl = document.createElement('div');
+            expandEl.id = noteId;
+            expandEl.className = 'paper-note-expand';
+            expandEl.innerHTML = noteContent;
+            
+            noteEl.parentNode.insertBefore(expandEl, noteEl.nextSibling);
+            noteEl.classList.add('expanded');
+            
+            expandEl.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+            this.renderMath(expandEl);
+            
+        } catch (error) {
+            console.error('加载注释失败:', error);
+            const errorEl = document.createElement('div');
+            errorEl.className = 'paper-note-expand paper-note-error';
+            errorEl.textContent = `加载失败: ${error.message}`;
+            noteEl.parentNode.insertBefore(errorEl, noteEl.nextSibling);
+        } finally {
+            noteEl.classList.remove('loading');
+        }
+    }
+
+    // 加载注释文件
+    async loadNoteFile(filename) {
+        const basePath = this.getBasePath();
+        const url = `${basePath}papers/${this.currentPaper.filename}/${filename}.md`;
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`文件不存在: ${filename}`);
+        }
+        
+        const markdown = await response.text();
+        const { metadata, content } = this.parseFrontMatter(markdown);
+        
+        const html = this.converter.makeHtml(content);
+        
+        const title = metadata.title || filename;
+        
+        return `
+            <div class="paper-note-header">
+                <span class="paper-note-title">${title}</span>
+                <button class="paper-note-close" onclick="this.parentElement.parentElement.style.display='none'; this.parentElement.parentElement.previousElementSibling.classList.remove('expanded');">×</button>
+            </div>
+            <div class="paper-note-body">${html}</div>
+        `;
     }
 
     // 渲染编者按

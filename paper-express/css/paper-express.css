@@ -363,3 +363,110 @@
         word-wrap: break-word;
     }
 }
+
+/* 论文标注样式 */
+.paper-note {
+    display: inline;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-weight: inherit;
+    transition: all 0.2s ease;
+    border-bottom: 1px dashed var(--primary-color);
+}
+
+.paper-note:hover {
+    border-bottom-style: solid;
+}
+
+.paper-note.expanded {
+    border-bottom-style: solid;
+}
+
+.paper-note.loading {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* 标注展开内容样式 */
+.paper-note-expand {
+    margin: 0.5em 0 1em 0;
+    padding: 1em 1.5em;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-left: 4px solid var(--primary-color);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    animation: noteExpand 0.3s ease;
+}
+
+@keyframes noteExpand {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.paper-note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8em;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+.paper-note-title {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 0.95em;
+}
+
+.paper-note-close {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 0 0.3em;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.paper-note-close:hover {
+    color: var(--primary-color);
+}
+
+.paper-note-body {
+    font-size: 0.95em;
+    line-height: 1.7;
+}
+
+.paper-note-body p:first-child {
+    margin-top: 0;
+}
+
+.paper-note-body p:last-child {
+    margin-bottom: 0;
+}
+
+.paper-note-error {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* 暗色主题下的标注样式 */
+.dark-theme .paper-note {
+    background: rgba(37, 99, 235, 0.2);
+}
+
+.dark-theme .paper-note:hover {
+    background: rgba(37, 99, 235, 0.3);
+}
+
+.dark-theme .paper-note-expand {
+    background: rgba(37, 99, 235, 0.1);
+}
