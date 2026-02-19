@@ -6,7 +6,9 @@ tags: ["Transformer", "NLP", "Deep Learning", "Attention Mechanism"]
 venue: "NeurIPS 2017"
 pdf_url: "https://arxiv.org/abs/1706.03762"
 code_url: "https://github.com/tensorflow/tensor2tensor"
+editor: "远行"
 editor_note: ["这篇论文提出了具有里程碑意义的 Transformer 架构，彻底改变了 NLP 领域。", "核心创新是自注意力机制（Self-Attention），使模型能够并行处理序列数据。"]
+digest_pub_time: "2026-02-14"
 ---
 
 # 摘要

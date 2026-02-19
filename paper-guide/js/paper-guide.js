@@ -413,6 +413,16 @@ class PaperGuide {
             digestInfoEl.style.display = 'none';
         }
 
+        // 显示文摘作者
+        const digestAuthorEl = document.getElementById('digest-author');
+        const digestAuthorNameEl = document.getElementById('meta-digest-author');
+        if (metadata.editor) {
+            digestAuthorEl.style.display = 'flex';
+            digestAuthorNameEl.textContent = metadata.editor;
+        } else {
+            digestAuthorEl.style.display = 'none';
+        }
+
         // 显示论文发布时间和发表 venue
         document.getElementById('meta-date').textContent = metadata.date || '';
         document.getElementById('meta-venue').textContent = metadata.venue || '';

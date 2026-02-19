@@ -219,12 +219,20 @@ body {
 }
 
 /* 暗色主题下其他蓝色元素反色 */
-.dark-theme .digest-info {
+.dark-theme .digest-meta-row {
     border-bottom-color: var(--border-color);
 }
 
 .dark-theme .digest-info i {
     color: #93c5fd;
+}
+
+.dark-theme .digest-author i {
+    color: #93c5fd;
+}
+
+.dark-theme #meta-digest-author {
+    color: var(--text-primary);
 }
 
 .dark-theme .progress-bar {
@@ -371,14 +379,38 @@ body {
     gap: 8px;
     font-size: 0.875rem;
     color: var(--text-secondary);
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border-color);
 }
 
 .digest-info i {
     font-size: 1rem;
     color: var(--primary-color);
+}
+
+.digest-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.digest-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.digest-author i {
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+#meta-digest-author {
+    font-weight: 500;
+    color: var(--text-primary);
 }
 
 .paper-title {

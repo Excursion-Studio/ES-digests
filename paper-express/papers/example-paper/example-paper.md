@@ -6,7 +6,9 @@ tags: ["Tutorial", "Express"]
 venue: "Paper Express Documentation"
 pdf_url: "#"
 code_url: "#"
+editor: "远行"
 editor_note: ["这是一篇示例论文，展示了 Paper Express 支持的 Markdown 格式和功能。", "请根据实际需求修改内容。"]
+digest_pub_time: "2026-02-15"
 ---
 
 # 欢迎使用 Paper Express

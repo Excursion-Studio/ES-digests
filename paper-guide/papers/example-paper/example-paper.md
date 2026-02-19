@@ -6,6 +6,8 @@ tags: ["Tutorial", "Guide"]
 venue: "Paper Guide Documentation"
 pdf_url: "#"
 code_url: "#"
+editor: "远行"
+editor_note: ["这是一篇示例论文，展示了 Paper Guide 支持的 Markdown 格式和功能。", "核心创新是自注意力机制（Self-Attention），使模型能够并行处理序列数据。"]
 digest_pub_time: "2026-02-17"
 ---
 
