@@ -137,8 +137,8 @@
 }
 
 .markdown-body pre {
-    background: #1e293b;
-    color: #e2e8f0;
+    background: #f1f5f9;
+    color: #1e293b;
     padding: 1.5em;
     border-radius: var(--radius);
     overflow-x: auto;
@@ -331,6 +331,134 @@
     .markdown-body .two-column {
         grid-template-columns: 1fr;
     }
+
+    .markdown-body {
+        overflow-x: hidden;
+    }
+
+    .markdown-body pre {
+        padding: 1em;
+        font-size: 0.8rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .markdown-body pre code {
+        font-size: 0.8rem;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .markdown-body table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.875rem;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .markdown-body th,
+    .markdown-body td {
+        padding: 8px 12px;
+        white-space: nowrap;
+    }
+
+    .markdown-body img {
+        margin: 1em 0;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .markdown-body mjx-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0.5em 0;
+        max-width: 100%;
+    }
+
+    .markdown-body ul,
+    .markdown-body ol {
+        padding-left: 1.5em;
+        box-sizing: border-box;
+    }
+
+    .markdown-body blockquote {
+        padding: 0.8em 1em;
+        margin: 1em 0;
+        box-sizing: border-box;
+    }
+
+    .markdown-body code {
+        word-break: break-word;
+    }
+}
+
+@media (max-width: 480px) {
+    .markdown-body {
+        overflow-x: hidden;
+    }
+
+    .markdown-body pre {
+        padding: 0.75em;
+        font-size: 0.75rem;
+        margin: 1em 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .markdown-body pre code {
+        font-size: 0.75rem;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .markdown-body table {
+        font-size: 0.8125rem;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .markdown-body th,
+    .markdown-body td {
+        padding: 6px 10px;
+    }
+
+    .markdown-body img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .markdown-body ul,
+    .markdown-body ol {
+        padding-left: 1.2em;
+    }
+
+    .paper-note-expand {
+        padding: 0.75em 1em;
+        margin: 0.5em 0;
+        box-sizing: border-box;
+    }
+
+    .paper-note-header {
+        margin-bottom: 0.5em;
+        padding-bottom: 0.5em;
+    }
+
+    .paper-note-title {
+        font-size: 0.9em;
+    }
+
+    .paper-note-close {
+        font-size: 1.1em;
+        padding: 0.3em 0.5em;
+    }
+
+    .paper-note-body {
+        font-size: 0.9em;
+    }
 }
 
 /* 图表标题 */
@@ -470,6 +598,11 @@
 .dark-theme .markdown-body code {
     color: #93c5fd;
     background: rgba(147, 197, 253, 0.1);
+}
+
+.dark-theme .markdown-body pre {
+    background: #1e293b;
+    color: #e2e8f0;
 }
 
 .dark-theme .markdown-body a {

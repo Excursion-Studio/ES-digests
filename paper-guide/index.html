@@ -12,7 +12,8 @@
     <!-- Showdown.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
     <!-- 代码高亮 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" id="hljs-light-theme">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" id="hljs-dark-theme" disabled>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <!-- MathJax 数学公式渲染 -->
     <script>
@@ -51,22 +52,41 @@
             <!-- 顶部工具栏 -->
             <header class="toolbar">
                 <h1 class="site-title">
-                    <span class="site-icon"></span>
+                    <a href="https://excursion-studio.github.io/?lang=zh" class="site-logo-link" target="_blank">
+                        <span class="site-icon"></span>
+                    </a>
                     <span class="site-name">文摘系列 - 论文导读</span>
                 </h1>
                 <div class="toolbar-actions">
+                    <button class="toc-toggle" id="toc-toggle" title="目录">
+                        <i class="fa-solid fa-list"></i>
+                    </button>
                     <button class="theme-toggle" id="theme-toggle" title="切换主题">
                         <i class="fa-solid fa-moon"></i>
                     </button>
                 </div>
             </header>
 
+            <!-- 移动端目录抽屉 -->
+            <div class="toc-drawer" id="toc-drawer">
+                <div class="toc-drawer-header">
+                    <h3>目录</h3>
+                    <button class="toc-drawer-close" id="toc-drawer-close">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+                </div>
+                <nav class="toc-drawer-nav">
+                    <ul id="toc-drawer-list"></ul>
+                </nav>
+            </div>
+            <div class="toc-overlay" id="toc-overlay"></div>
+
             <!-- 阅读进度条 -->
             <div class="progress-bar" id="progress-bar"></div>
 
             <!-- 内容容器 -->
             <div class="content-wrapper">
-                <!-- 编者按（横跨整个宽度） -->
+                <!-- 编者按 -->
                 <div class="editor-note" id="editor-note" style="display: none;">
                     <div class="editor-note-header">
                         <i class="fa-solid fa-pen-fancy"></i>

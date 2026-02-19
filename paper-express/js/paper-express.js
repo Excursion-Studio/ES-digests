@@ -102,6 +102,24 @@ class PaperExpress {
             themeToggle.addEventListener('click', () => this.toggleTheme());
         }
 
+        // 移动端目录抽屉
+        const tocToggle = document.getElementById('toc-toggle');
+        const tocDrawer = document.getElementById('toc-drawer');
+        const tocDrawerClose = document.getElementById('toc-drawer-close');
+        const tocOverlay = document.getElementById('toc-overlay');
+
+        if (tocToggle) {
+            tocToggle.addEventListener('click', () => this.openTOCDrawer());
+        }
+
+        if (tocDrawerClose) {
+            tocDrawerClose.addEventListener('click', () => this.closeTOCDrawer());
+        }
+
+        if (tocOverlay) {
+            tocOverlay.addEventListener('click', () => this.closeTOCDrawer());
+        }
+
         // 滚动事件：进度条 + 目录高亮
         window.addEventListener('scroll', () => {
             this.updateProgressBar();
@@ -426,15 +444,18 @@ class PaperExpress {
     generateTOC(contentEl) {
         const headings = contentEl.querySelectorAll('h1, h2, h3');
         const tocList = document.getElementById('toc-list');
+        const tocDrawerList = document.getElementById('toc-drawer-list');
         
         if (headings.length === 0) {
             document.getElementById('toc-nav').style.display = 'none';
             this.headings = [];
+            if (tocDrawerList) tocDrawerList.innerHTML = '';
             return;
         }
 
         document.getElementById('toc-nav').style.display = 'block';
         tocList.innerHTML = '';
+        if (tocDrawerList) tocDrawerList.innerHTML = '';
         
         // 存储标题元素引用
         this.headings = [];
@@ -442,47 +463,17 @@ class PaperExpress {
         // 添加编者按（如果存在）
         const editorNote = document.getElementById('editor-note');
         if (editorNote && editorNote.style.display !== 'none') {
-            const li = document.createElement('li');
-            li.className = 'toc-special toc-editor-note';
-            
-            const a = document.createElement('a');
-            a.href = '#editor-note';
-            a.innerHTML = '<i class="fa-solid fa-pen-fancy"></i> 编者按';
-            a.addEventListener('click', (e) => {
-                e.preventDefault();
-                editorNote.scrollIntoView({ behavior: 'smooth' });
-            });
-
-            li.appendChild(a);
-            tocList.appendChild(li);
-            
-            this.headings.push({
-                element: editorNote,
-                tocLink: a
-            });
+            this.addTOCItem(tocList, tocDrawerList, 'toc-special toc-editor-note', 
+                '<i class="fa-solid fa-pen-fancy"></i> 编者按', 
+                '#editor-note', editorNote);
         }
 
         // 添加论文信息
         const paperMeta = document.getElementById('paper-meta');
         if (paperMeta && paperMeta.style.display !== 'none') {
-            const li = document.createElement('li');
-            li.className = 'toc-special toc-paper-meta';
-            
-            const a = document.createElement('a');
-            a.href = '#paper-meta';
-            a.innerHTML = '<i class="fa-solid fa-file-lines"></i> 论文信息';
-            a.addEventListener('click', (e) => {
-                e.preventDefault();
-                paperMeta.scrollIntoView({ behavior: 'smooth' });
-            });
-
-            li.appendChild(a);
-            tocList.appendChild(li);
-            
-            this.headings.push({
-                element: paperMeta,
-                tocLink: a
-            });
+            this.addTOCItem(tocList, tocDrawerList, 'toc-special toc-paper-meta',
+                '<i class="fa-solid fa-file-lines"></i> 论文信息',
+                '#paper-meta', paperMeta);
         }
 
         // 添加分隔线
@@ -490,32 +481,70 @@ class PaperExpress {
             const divider = document.createElement('li');
             divider.className = 'toc-divider';
             tocList.appendChild(divider);
+            
+            if (tocDrawerList) {
+                const drawerDivider = document.createElement('li');
+                drawerDivider.className = 'toc-divider';
+                tocDrawerList.appendChild(drawerDivider);
+            }
         }
 
         headings.forEach(heading => {
-            const li = document.createElement('li');
-            li.className = `toc-${heading.tagName.toLowerCase()}`;
-            
-            const a = document.createElement('a');
-            a.href = `#${heading.id}`;
-            a.textContent = heading.textContent.replace('¶', '').trim();
-            a.addEventListener('click', (e) => {
-                e.preventDefault();
-                heading.scrollIntoView({ behavior: 'smooth' });
-            });
-
-            li.appendChild(a);
-            tocList.appendChild(li);
-            
-            // 存储标题和对应的目录项
-            this.headings.push({
-                element: heading,
-                tocLink: a
-            });
+            this.addTOCItem(tocList, tocDrawerList, `toc-${heading.tagName.toLowerCase()}`,
+                heading.textContent.replace('¶', '').trim(),
+                `#${heading.id}`, heading);
         });
         
         // 初始化高亮
         this.updateTOCHighlight();
+    }
+
+    // 添加目录项到两个列表
+    addTOCItem(desktopList, mobileList, className, text, href, targetElement) {
+        // 桌面端目录项
+        const desktopLi = document.createElement('li');
+        desktopLi.className = className;
+        
+        const desktopA = document.createElement('a');
+        desktopA.href = href;
+        desktopA.innerHTML = text;
+        desktopA.addEventListener('click', (e) => {
+            e.preventDefault();
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+        });
+        
+        desktopLi.appendChild(desktopA);
+        desktopList.appendChild(desktopLi);
+        
+        // 移动端目录项
+        if (mobileList) {
+            const mobileLi = document.createElement('li');
+            mobileLi.className = className;
+            
+            const mobileA = document.createElement('a');
+            mobileA.href = href;
+            mobileA.innerHTML = text;
+            mobileA.addEventListener('click', (e) => {
+                e.preventDefault();
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+                this.closeTOCDrawer();
+            });
+            
+            mobileLi.appendChild(mobileA);
+            mobileList.appendChild(mobileLi);
+            
+            // 存储标题和对应的目录项（使用桌面端的链接作为主链接）
+            this.headings.push({
+                element: targetElement,
+                tocLink: desktopA,
+                mobileTocLink: mobileA
+            });
+        } else {
+            this.headings.push({
+                element: targetElement,
+                tocLink: desktopA
+            });
+        }
     }
 
     // 更新目录高亮
@@ -542,8 +571,14 @@ class PaperExpress {
         this.headings.forEach(item => {
             if (currentHeading && item === currentHeading) {
                 item.tocLink.classList.add('active');
+                if (item.mobileTocLink) {
+                    item.mobileTocLink.classList.add('active');
+                }
             } else {
                 item.tocLink.classList.remove('active');
+                if (item.mobileTocLink) {
+                    item.mobileTocLink.classList.remove('active');
+                }
             }
         });
 
@@ -565,6 +600,34 @@ class PaperExpress {
                 tocNav.scrollTop += (linkRect.bottom - navRect.bottom + 20);
             }
         }
+    }
+
+    // 打开移动端目录抽屉
+    openTOCDrawer() {
+        const tocDrawer = document.getElementById('toc-drawer');
+        const tocOverlay = document.getElementById('toc-overlay');
+        
+        if (tocDrawer) {
+            tocDrawer.classList.add('open');
+        }
+        if (tocOverlay) {
+            tocOverlay.classList.add('show');
+        }
+        document.body.style.overflow = 'hidden';
+    }
+
+    // 关闭移动端目录抽屉
+    closeTOCDrawer() {
+        const tocDrawer = document.getElementById('toc-drawer');
+        const tocOverlay = document.getElementById('toc-overlay');
+        
+        if (tocDrawer) {
+            tocDrawer.classList.remove('open');
+        }
+        if (tocOverlay) {
+            tocOverlay.classList.remove('show');
+        }
+        document.body.style.overflow = '';
     }
 
     // 显示欢迎页面
@@ -601,6 +664,20 @@ class PaperExpress {
         toggleBtn.innerHTML = isDark 
             ? '<i class="fa-solid fa-sun"></i>' 
             : '<i class="fa-solid fa-moon"></i>';
+        
+        // 切换代码高亮主题
+        this.toggleHighlightTheme(isDark);
+    }
+
+    // 切换代码高亮主题
+    toggleHighlightTheme(isDark) {
+        const lightTheme = document.getElementById('hljs-light-theme');
+        const darkTheme = document.getElementById('hljs-dark-theme');
+        
+        if (lightTheme && darkTheme) {
+            lightTheme.disabled = isDark;
+            darkTheme.disabled = !isDark;
+        }
     }
 
     // 更新进度条
@@ -630,6 +707,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
         document.getElementById('theme-toggle').innerHTML = '<i class="fa-solid fa-sun"></i>';
+        window.paperExpress.toggleHighlightTheme(true);
     }
     
     // 隐藏预加载屏幕
