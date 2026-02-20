@@ -25,7 +25,22 @@
 ```
 papers/
 └── my-paper/
-    └── my-paper.md
+    ├── my-paper.md          # 主论文文件
+    ├── notes/               # 展开式注释文件目录
+    │   └── detail.md
+    └── imgs/                # 图片文件目录
+        ├── figure1.png
+        └── figure2.jpg
+```
+
+**注意**：所有图片（包括 notes 中引用的图片）都应该放在 `imgs/` 文件夹中。
+
+### 添加图片
+
+在 Markdown 中使用标准语法添加图片，路径相对于当前论文目录：
+
+```markdown
+![图片说明](imgs/figure1.png)
 ```
 
 文件内容：

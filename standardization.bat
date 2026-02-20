@@ -65,6 +65,10 @@ if not exist "%guide_dir%\notes" (
     mkdir "%guide_dir%\notes"
     echo 创建目录: %guide_dir%\notes
 )
+if not exist "%guide_dir%\imgs" (
+    mkdir "%guide_dir%\imgs"
+    echo 创建目录: %guide_dir%\imgs
+)
 
 (
 echo ---
@@ -87,6 +91,8 @@ echo.
 echo ## 引言
 echo.
 echo ## 方法
+echo.
+echo !^[示例图片]^(imgs/example.png^)
 echo.
 echo ## 实验
 echo.
@@ -104,6 +110,10 @@ if not exist "%express_dir%\notes" (
     mkdir "%express_dir%\notes"
     echo 创建目录: %express_dir%\notes
 )
+if not exist "%express_dir%\imgs" (
+    mkdir "%express_dir%\imgs"
+    echo 创建目录: %express_dir%\imgs
+)
 
 (
 echo ---
@@ -126,6 +136,8 @@ echo.
 echo ## 引言
 echo.
 echo ## 方法
+echo.
+echo !^[示例图片]^(imgs/example.png^)
 echo.
 echo ## 实验
 echo.

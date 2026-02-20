@@ -24,8 +24,10 @@ guide_dir="paper-guide/papers/$normalized_title"
 create_template() {
     local dir=$1
     mkdir -p "$dir/notes"
+    mkdir -p "$dir/imgs"
     echo "创建目录: $dir"
     echo "创建目录: $dir/notes"
+    echo "创建目录: $dir/imgs"
     
     cat > "$dir/$normalized_title.md" << EOF
 ---
@@ -48,6 +50,8 @@ digest_pub_time: "2026-02-20"
 ## 引言
 
 ## 方法
+
+![示例图片](imgs/example.png)
 
 ## 实验
 
