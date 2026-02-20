@@ -7,7 +7,7 @@ venue: "Paper Guide Documentation"
 pdf_url: "#"
 code_url: "#"
 editor: "远行"
-editor_note: ["这是一篇示例论文，展示了 Paper Guide 支持的 Markdown 格式和功能。", "核心创新是自注意力机制（Self-Attention），使模型能够并行处理序列数据。"]
+editor_note: ["这是一篇示例论文。", "展示了 Paper Guide 支持的 Markdown 格式和功能。"]
 digest_pub_time: "2026-02-17"
 ---
 
@@ -97,11 +97,14 @@ console.log(paperGuide);
 ---
 title: "论文标题"
 authors: ["作者1", "作者2"]
-date: "2024-01-01"
+date: "论文发表日期 (e.g. 2024-01-01)"
 tags: ["标签1", "标签2"]
-venue: "发表会议/期刊"
-pdf_url: "PDF链接"
-code_url: "代码链接"
+venue: "会议/期刊名称"
+pdf_url: "https://arxiv.org/..."
+code_url: "https://github.com/..."  # 可选，代码仓库链接
+editor: "文摘作者"
+editor_note: ["编者按第一段", "编者按第二段"]
+digest_pub_time: "本文摘发布时间 (e.g. 2026-01-01)"
 ---
 ```
 
@@ -119,7 +122,33 @@ code_url: "代码链接"
 
 # 5. 高级功能
 
-## 5.1 任务列表
+## 5.1 展开式注释
+
+你可以在正文中添加可展开的注释，点击后会加载并显示其他 Markdown 文件的内容。
+
+例如：这里有一个关于{{note:notes/self-attention|自注意力机制}}的详细说明，点击即可展开查看。
+
+### 使用语法
+
+```markdown
+{{note:文件路径|显示文本}}
+```
+
+- `文件路径`：相对于当前论文目录的 Markdown 文件路径（不含 `.md` 扩展名）
+- `显示文本`：点击前显示的文字
+
+### 文件结构示例
+
+```
+papers/
+└── my-paper/
+    ├── my-paper.md          # 主论文
+    └── notes/
+        ├── detail1.md       # 注释文件1
+        └── detail2.md       # 注释文件2
+```
+
+## 5.2 任务列表
 
 - [x] 创建项目结构
 - [x] 实现 Markdown 渲染
@@ -127,7 +156,7 @@ code_url: "代码链接"
 - [ ] 添加数学公式支持
 - [ ] 添加搜索功能
 
-## 5.2 链接
+## 5.3 链接
 
 - [外部链接](https://github.com/showdownjs/showdown)
 - [内部锚点](#欢迎使用-paper-guide)

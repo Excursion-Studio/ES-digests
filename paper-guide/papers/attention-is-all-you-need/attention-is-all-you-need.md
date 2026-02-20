@@ -8,7 +8,7 @@ pdf_url: "https://arxiv.org/abs/1706.03762"
 code_url: "https://github.com/tensorflow/tensor2tensor"
 editor: "远行"
 editor_note: ["这篇论文提出了具有里程碑意义的 Transformer 架构，彻底改变了 NLP 领域。", "核心创新是自注意力机制（Self-Attention），使模型能够并行处理序列数据。"]
-digest_pub_time: "2026-02-16"
+digest_pub_time: "2026-02-14"
 ---
 
 # 摘要
@@ -44,7 +44,7 @@ $$h_t = f(h_{t-1}, x_t)$$
 ## 2.1 编码器和解码器堆栈
 
 **编码器**：编码器由 $N = 6$ 个相同层的堆栈组成。每层有两个子层：
-1. 多头{{note:note-self-attention|自注意力机制}}
+1. 多头{{note:notes/self-attention|自注意力机制}}
 2. 简单的、位置逐元素的全连接前馈网络
 
 我们对每个子层采用残差连接，然后进行层归一化。即每个子层的输出为：

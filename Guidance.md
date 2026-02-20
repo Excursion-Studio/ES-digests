@@ -20,13 +20,14 @@ papers/
 ---
 title: "论文标题"
 authors: ["作者1", "作者2"]
-date: "论文发表日期"
+date: "论文发表日期 (e.g. 2024-01-01)"
 tags: ["标签1", "标签2"]
 venue: "会议/期刊名称"
 pdf_url: "https://arxiv.org/..."
 code_url: "https://github.com/..." // 可选，代码仓库链接
+editor: "文摘作者"
 editor_note: ["编者按第一段", "编者按第二段"]
-digest_pub_time: "本文摘发布时间"
+digest_pub_time: "本文摘发布时间 (e.g. 2026-01-01)"
 ---
 
 # 摘要
@@ -50,12 +51,14 @@ digest_pub_time: "本文摘发布时间"
 |------|------|------|------|
 | `title` | string | ✅ | 论文标题 |
 | `authors` | array | ✅ | 作者列表 |
-| `date` | string | ✅ | 发表日期 (YYYY-MM-DD) |
+| `date` | string | ✅ | 发表日期 (e.g. 2024-01-01) |
 | `tags` | array | ⬜ | 标签列表 |
 | `venue` | string | ⬜ | 发表会议/期刊 |
 | `pdf_url` | string | ⬜ | PDF 链接 |
 | `code_url` | string | ⬜ | 代码仓库链接 |
+| `editor` | string | ⬜ | 文摘作者 |
 | `editor_note` | array/string | ⬜ | 编者按内容 |
+| `digest_pub_time` | string | ⬜ | 文摘发布时间 (e.g. 2026-01-01) |
 
 ## Markdown 语法支持
 
@@ -89,6 +92,32 @@ def hello():
 
 ```markdown
 > 这是一段引用文字
+```
+
+### 展开式注释
+
+在正文中添加可展开的注释，点击后加载其他 Markdown 文件：
+
+```markdown
+{{note:notes/detail|点击查看详情}}
+```
+
+**文件结构：**
+```
+papers/
+└── my-paper/
+    ├── my-paper.md          # 主论文文件
+    └── notes/
+        └── detail.md        # 注释文件（无需 Front Matter）
+```
+
+**注释文件格式：**
+```markdown
+---
+title: "注释标题"
+---
+
+注释内容，支持完整的 Markdown 语法...
 ```
 
 ## 自定义配置
@@ -129,3 +158,4 @@ def hello():
 - ✅ 目录滚动跟踪
 - ✅ 响应式设计
 - ✅ 编者按支持
+- ✅ 展开式注释（点击加载外部 Markdown）
