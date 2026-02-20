@@ -1,96 +1,143 @@
 @echo off
-chcp 936 >nul 2>&1
-setlocal enabledelayedexpansion
-
+chcp 65001 >nul
 echo ========================================
-echo   论文文件命名规范化工具
+echo   论文标题规范化工具
 echo ========================================
 echo.
-
-echo 请选择目标模块:
-echo   [1] Paper Guide  (论文导读)
-echo   [2] Paper Express (论文速递)
+set /p paper_title=请输入论文标题: 
 echo.
-set /p "module=请输入选项 (1/2): "
 
-if "%module%"=="1" (
-    set "module_dir=paper-guide"
-) else if "%module%"=="2" (
-    set "module_dir=paper-express"
-) else (
-    echo 错误：无效选项
-    goto :end
+set "normalized_title=%paper_title%"
+
+set "normalized_title=%normalized_title: =-%"
+
+set "normalized_title=%normalized_title:A=a%"
+set "normalized_title=%normalized_title:B=b%"
+set "normalized_title=%normalized_title:C=c%"
+set "normalized_title=%normalized_title:D=d%"
+set "normalized_title=%normalized_title:E=e%"
+set "normalized_title=%normalized_title:F=f%"
+set "normalized_title=%normalized_title:G=g%"
+set "normalized_title=%normalized_title:H=h%"
+set "normalized_title=%normalized_title:I=i%"
+set "normalized_title=%normalized_title:J=j%"
+set "normalized_title=%normalized_title:K=k%"
+set "normalized_title=%normalized_title:L=l%"
+set "normalized_title=%normalized_title:M=m%"
+set "normalized_title=%normalized_title:N=n%"
+set "normalized_title=%normalized_title:O=o%"
+set "normalized_title=%normalized_title:P=p%"
+set "normalized_title=%normalized_title:Q=q%"
+set "normalized_title=%normalized_title:R=r%"
+set "normalized_title=%normalized_title:S=s%"
+set "normalized_title=%normalized_title:T=t%"
+set "normalized_title=%normalized_title:U=u%"
+set "normalized_title=%normalized_title:V=v%"
+set "normalized_title=%normalized_title:W=w%"
+set "normalized_title=%normalized_title:X=x%"
+set "normalized_title=%normalized_title:Y=y%"
+set "normalized_title=%normalized_title:Z=z%"
+
+echo 规范化后的标题: %normalized_title%
+echo.
+echo 请选择要创建的项目:
+echo   1. Paper Guide
+echo   2. Paper Express
+echo.
+set /p choice=请输入选项 (1/2): 
+echo.
+
+set "express_dir=paper-express\papers\%normalized_title%"
+set "guide_dir=paper-guide\papers\%normalized_title%"
+
+if "%choice%"=="1" goto create_guide
+if "%choice%"=="2" goto create_express
+
+echo 无效选项！
+goto end
+
+:create_guide
+if not exist "%guide_dir%" (
+    mkdir "%guide_dir%"
+    echo 创建目录: %guide_dir%
+)
+if not exist "%guide_dir%\notes" (
+    mkdir "%guide_dir%\notes"
+    echo 创建目录: %guide_dir%\notes
 )
 
+(
+echo ---
+echo title: "%paper_title%"
+echo authors: ["Author Name"]
+echo date: "2024-01-01"
+echo tags: ["Tag1", "Tag2"]
+echo venue: "Conference/Journal"
+echo pdf_url: "#"
+echo code_url: "#"
+echo editor: "Editor Name"
+echo editor_note: ["编者按第一段", "编者按第二段"]
+echo digest_pub_time: "2026-02-20"
+echo ---
 echo.
-set /p "title=请输入论文标题: "
+echo # %paper_title%
+echo.
+echo ## 摘要
+echo.
+echo ## 引言
+echo.
+echo ## 方法
+echo.
+echo ## 实验
+echo.
+echo ## 结论
+) > "%guide_dir%\%normalized_title%.md"
+echo 创建模板文件: %guide_dir%\%normalized_title%.md
+goto end
 
-if "%title%"=="" (
-    echo 错误：标题不能为空
-    goto :end
+:create_express
+if not exist "%express_dir%" (
+    mkdir "%express_dir%"
+    echo 创建目录: %express_dir%
+)
+if not exist "%express_dir%\notes" (
+    mkdir "%express_dir%\notes"
+    echo 创建目录: %express_dir%\notes
 )
 
-for /f "usebackq delims=" %%i in (`powershell -command "$t='%title%'.Replace(' ', '-').Replace(' ', '-').Replace('_', '-'); $t=[regex]::Replace($t, '[^a-zA-Z0-9\-]', '').ToLower(); while($t.Contains('--')){$t=$t.Replace('--', '-')}; Write-Output $t"`) do set "normalized=%%i"
-
+(
+echo ---
+echo title: "%paper_title%"
+echo authors: ["Author Name"]
+echo date: "2024-01-01"
+echo tags: ["Tag1", "Tag2"]
+echo venue: "Conference/Journal"
+echo pdf_url: "#"
+echo code_url: "#"
+echo editor: "Editor Name"
+echo editor_note: ["编者按第一段", "编者按第二段"]
+echo digest_pub_time: "2026-02-20"
+echo ---
 echo.
-echo ========================================
-echo   目标模块: %module_dir%
-echo   原始标题: %title%
-echo   规范名称: !normalized!
-echo ========================================
+echo # %paper_title%
 echo.
-
-set /p "confirm=是否创建论文文件夹结构? (Y/N): "
-if /i "!confirm!"=="Y" (
-    set "target=%module_dir%\papers\!normalized!"
-    
-    if exist "!target!" (
-        echo 警告：文件夹已存在: !target!
-    ) else (
-        mkdir "!target!"
-        mkdir "!target!\notes"
-        echo 已创建文件夹: !target!
-        echo 已创建文件夹: !target!\notes
-    )
-    
-    echo.
-    set /p "create_md=是否创建论文模板文件? (Y/N): "
-    if /i "!create_md!"=="Y" (
-        set "md_file=!target!\!normalized!.md"
-        
-        (
-            echo ---
-            echo title: "%title%"
-            echo authors: ["作者1", "作者2"]
-            echo date: "论文发表日期 (e.g. 2024-01-01)"
-            echo tags: ["标签1", "标签2"]
-            echo venue: "会议/期刊名称"
-            echo pdf_url: "https://arxiv.org/..."
-            echo code_url: "https://github.com/..."  # 可选，代码仓库链接
-            echo editor: "文摘作者"
-            echo editor_note: ["编者按第一段", "编者按第二段"]
-            echo digest_pub_time: "本文摘发布时间 (e.g. 2026-01-01)"
-            echo ---
-            echo.
-            echo # 摘要
-            echo.
-            echo 论文摘要内容...
-            echo.
-            echo ---
-            echo.
-            echo # 1. 引言
-            echo.
-            echo 正文内容...
-        ) > "!md_file!"
-        
-        echo 已创建文件: !md_file!
-    )
-)
-
+echo ## 摘要
 echo.
-echo 完成！
+echo ## 引言
+echo.
+echo ## 方法
+echo.
+echo ## 实验
+echo.
+echo ## 结论
+) > "%express_dir%\%normalized_title%.md"
+echo 创建模板文件: %express_dir%\%normalized_title%.md
+goto end
 
 :end
 echo.
-echo 按任意键退出...
-pause >nul
+echo ========================================
+echo   完成！
+echo ========================================
+echo.
+pause
