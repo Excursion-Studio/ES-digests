@@ -89,7 +89,16 @@ console.log(paperExpress);
 
 # 4. 论文写作建议
 
-## 4.1 使用 Front Matter
+## 4.1 快速创建新论文
+
+项目提供了自动化脚本，可快速创建符合命名规范的论文文件夹和模板文件：
+
+- **Windows**: 双击运行 `standardization.bat`
+- **Linux/macOS**: 终端运行 `./standardization.sh`
+
+脚本会自动将论文标题转换为规范命名（小写、连字符分隔），并创建完整的文件夹结构。
+
+## 4.2 使用 Front Matter
 
 每篇论文 Markdown 文件的开头应该包含元数据：
 
@@ -108,7 +117,7 @@ digest_pub_time: "本文摘发布时间 (e.g. 2026-01-01)"
 ---
 ```
 
-## 4.2 结构化内容
+## 4.3 结构化内容
 
 建议按以下结构组织论文：
 
