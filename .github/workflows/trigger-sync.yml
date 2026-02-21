@@ -2,9 +2,10 @@ name: Trigger Sync with Excursion Studio
 
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: [main, master]
+    paths:
+      - 'paper-guide/papers/**'
+      - 'paper-express/papers/**'
   workflow_dispatch:
 
 jobs:
