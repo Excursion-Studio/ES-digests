@@ -19,35 +19,52 @@
 .markdown-body h6 {
     margin-top: 2em;
     margin-bottom: 1em;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.3;
     color: var(--text-primary);
     scroll-margin-top: 80px;
+    position: relative;
 }
 
 .markdown-body h1 {
-    font-size: 2rem;
-    border-bottom: 2px solid var(--border-color);
+    font-size: 1.75rem;
+    border-bottom: 3px solid var(--primary-color);
     padding-bottom: 0.5em;
+    letter-spacing: 0.02em;
 }
 
 .markdown-body h2 {
-    font-size: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.3em;
+    font-size: 1.4rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.4em;
+    padding-left: 0.5em;
+    border-left: 4px solid var(--primary-color);
+    letter-spacing: 0.01em;
 }
 
 .markdown-body h3 {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
+    padding-left: 0.5em;
+    border-left: 3px solid var(--primary-color);
+    color: #0d9488;
 }
 
 .markdown-body h4 {
-    font-size: 1.125rem;
+    font-size: 1.1rem;
+    color: #059669;
+    font-weight: 700;
 }
 
-.markdown-body h5,
+.markdown-body h5 {
+    font-size: 1.05rem;
+    color: #1e293b;
+    font-weight: 700;
+}
+
 .markdown-body h6 {
     font-size: 1rem;
+    color: #334155;
+    font-weight: 700;
 }
 
 /* 标题锚点 */
@@ -70,8 +87,7 @@
 }
 
 .markdown-body .anchor::before {
-    content: '#';
-    color: var(--primary-color);
+    content: '';
 }
 
 /* 段落 */
@@ -228,7 +244,7 @@
 /* 强调 */
 .markdown-body strong {
     font-weight: 600;
-    color: var(--text-primary);
+    color: #1e40af;
 }
 
 .markdown-body em {
@@ -252,25 +268,45 @@
     padding: 0.5em 0;
 }
 
-/* MathJax 样式优化 */
-.markdown-body mjx-container {
-    overflow-x: auto;
-    overflow-y: hidden;
+/* KaTeX 样式优化 */
+.markdown-body .katex {
+    font-size: 1.1em;
 }
 
-.markdown-body mjx-container[justify="left"] {
-    text-align: left;
-}
-
-.markdown-body mjx-container[display="true"] {
+.markdown-body .katex-display {
     display: block;
     margin: 1em 0;
     overflow-x: auto;
+    overflow-y: hidden;
     padding: 0.5em 0;
 }
 
-/* 暗色主题下的 MathJax */
-.dark-theme .markdown-body mjx-container {
+.markdown-body .katex-display > .katex {
+    display: inline-block;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+.markdown-body .katex-display > .katex > .katex-html {
+    display: block;
+    position: relative;
+}
+
+.markdown-body .katex-display > .katex > .katex-html > .tag {
+    position: absolute;
+    right: 0;
+}
+
+/* 暗色主题下的 KaTeX */
+.dark-theme .markdown-body .katex {
+    color: var(--text-primary);
+}
+
+.dark-theme .markdown-body strong .katex {
+    color: inherit;
+}
+
+.dark-theme .markdown-body .katex-display {
     color: var(--text-primary);
 }
 
@@ -372,7 +408,7 @@
         height: auto;
     }
 
-    .markdown-body mjx-container {
+    .markdown-body .katex-display {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         padding: 0.5em 0;
@@ -437,23 +473,18 @@
     }
 
     .paper-note-expand {
-        padding: 0.75em 1em;
-        margin: 0.5em 0;
+        padding: 0.5em 0.8em;
+        margin: 0.3em 0;
         box-sizing: border-box;
     }
 
     .paper-note-header {
-        margin-bottom: 0.5em;
-        padding-bottom: 0.5em;
+        margin-bottom: 0.3em;
+        padding-bottom: 0.2em;
     }
 
     .paper-note-title {
         font-size: 0.9em;
-    }
-
-    .paper-note-close {
-        font-size: 1.1em;
-        padding: 0.3em 0.5em;
     }
 
     .paper-note-body {
@@ -517,8 +548,8 @@
 
 /* 标注展开内容样式 */
 .paper-note-expand {
-    margin: 0.5em 0 1em 0;
-    padding: 1em 1.5em;
+    margin: 0.3em 0 0.8em 0;
+    padding: 0.6em 1em;
     background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0.1) 100%);
     border: 1px solid rgba(37, 99, 235, 0.2);
     border-left: 4px solid var(--primary-color);
@@ -541,8 +572,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.8em;
-    padding-bottom: 0.5em;
+    margin-bottom: 0.4em;
+    padding-bottom: 0.3em;
     border-bottom: 1px solid rgba(37, 99, 235, 0.2);
 }
 
@@ -550,21 +581,6 @@
     font-weight: 600;
     color: var(--primary-color);
     font-size: 0.95em;
-}
-
-.paper-note-close {
-    background: none;
-    border: none;
-    font-size: 1.2em;
-    cursor: pointer;
-    color: var(--text-muted);
-    padding: 0 0.3em;
-    line-height: 1;
-    transition: color 0.2s;
-}
-
-.paper-note-close:hover {
-    color: var(--primary-color);
 }
 
 .paper-note-body {
@@ -588,7 +604,7 @@
 
 /* 暗色主题下的 Markdown 蓝色元素反色 */
 .dark-theme .markdown-body .anchor::before {
-    color: #93c5fd;
+    content: '';
 }
 
 .dark-theme .markdown-body blockquote {
@@ -655,6 +671,34 @@
     color: #93c5fd;
 }
 
-.dark-theme .paper-note-close:hover {
+.dark-theme .markdown-body strong {
+    color: #fef08a;
+    text-shadow: 0 0 1px rgba(254, 240, 138, 0.3);
+}
+
+/* 暗色主题下的标题样式 */
+.dark-theme .markdown-body h1 {
+    border-bottom-color: #93c5fd;
+}
+
+.dark-theme .markdown-body h2 {
+    border-left-color: #93c5fd;
+    border-bottom-color: #93c5fd;
+}
+
+.dark-theme .markdown-body h3 {
+    border-left-color: #5eead4;
+    color: #5eead4;
+}
+
+.dark-theme .markdown-body h4 {
+    color: #6ee7b7;
+}
+
+.dark-theme .markdown-body h5 {
     color: #93c5fd;
+}
+
+.dark-theme .markdown-body h6 {
+    color: #cbd5e1;
 }

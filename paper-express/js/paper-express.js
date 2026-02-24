@@ -4,86 +4,106 @@
 
 class PaperExpress {
     constructor() {
-        this.converter = null;
         this.currentPaper = null;
+        this.mathBlocks = [];
+        this.mathInlines = [];
         this.init();
     }
 
     init() {
-        this.initShowdown();
+        this.initMarked();
         this.bindEvents();
+        this.bindGlobalClick();
         this.handleRoute();
     }
 
-    // 初始化 Showdown 转换器
-    initShowdown() {
-        this.converter = new showdown.Converter({
+    bindGlobalClick() {
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.paper-note')) return;
+            const expandedNotes = document.querySelectorAll('.paper-note-expand');
+            expandedNotes.forEach(expandEl => {
+                if (expandEl.style.display !== 'none' && !expandEl.contains(e.target)) {
+                    const noteEl = expandEl.previousElementSibling;
+                    if (noteEl && noteEl.classList.contains('paper-note')) {
+                        expandEl.style.display = 'none';
+                        noteEl.classList.remove('expanded');
+                        noteEl.scrollIntoView({behavior: 'smooth', block: 'center'});
+                    }
+                }
+            });
+        });
+    }
+
+    // 初始化 Marked 转换器
+    initMarked() {
+        // 配置 marked
+        marked.setOptions({
+            gfm: true,
             tables: true,
-            tasklists: true,
-            strikethrough: true,
-            emoji: true,
-            simplifiedAutoLink: true,
-            ghCodeBlocks: true,
-            smoothLivePreview: true,
-            headerLevelStart: 1,
-            parseImgDimensions: true,
-            openLinksInNewWindow: true,
-            backslashEscapesHTMLTags: true,
-            literalMidWordUnderscores: true,
-            excludeTrailingPunctuationFromURLs: true
+            breaks: false,
+            pedantic: false,
+            sanitize: false,
+            smartLists: true,
+            smartypants: true,
+            xhtml: false,
+            headerIds: false
         });
 
-        // 自定义扩展：保护 LaTeX 公式不被 Markdown 处理
-        this.converter.addExtension({
-            type: 'lang',
-            filter: (text) => {
-                // 先保护块级公式 $$...$$
-                let result = text.replace(/\$\$([\s\S]+?)\$\$/g, (match, formula) => {
-                    const encoded = btoa(unescape(encodeURIComponent('$$' + formula + '$$')));
-                    return `MATHBLOCK${encoded}ENDBLOCK`;
-                });
-                // 再保护行内公式 $...$
-                result = result.replace(/\$([^\$\n]+?)\$/g, (match, formula) => {
-                    const encoded = btoa(unescape(encodeURIComponent('$' + formula + '$')));
-                    return `MATHINLINE${encoded}ENDINLINE`;
-                });
-                return result;
-            }
+        // 自定义 renderer
+        const renderer = new marked.Renderer();
+
+        // 自定义 heading 渲染来添加锚点
+        renderer.heading = ({ tokens, depth: level, text: rawText }) => {
+            // 将 tokens 转换为纯文本
+            const extractText = (tokens) => {
+                if (!tokens) return '';
+                return tokens.map(token => {
+                    if (token.type === 'text') return token.text;
+                    if (token.tokens) return extractText(token.tokens);
+                    return '';
+                }).join('');
+            };
+            const text = extractText(tokens);
+            const anchor = this.generateAnchor(rawText || text);
+            return `<h${level}><a id="${anchor}" class="anchor" href="#${anchor}"></a>${text}</h${level}>\n`;
+        };
+
+        marked.use({ renderer });
+    }
+
+    // 保护 LaTeX 公式
+    protectMath(text) {
+        this.mathBlocks = [];
+        this.mathInlines = [];
+
+        // 保护块级公式 $$...$$
+        text = text.replace(/\$\$([\s\S]+?)\$\$/g, (match, formula) => {
+            this.mathBlocks.push('$$' + formula + '$$');
+            return `MATHBLOCK${this.mathBlocks.length - 1}ENDBLOCK`;
         });
 
-        // 后处理扩展：恢复 LaTeX 公式
-        this.converter.addExtension({
-            type: 'output',
-            filter: (text) => {
-                // 恢复块级公式
-                let result = text.replace(/MATHBLOCK([A-Za-z0-9+/=]+)ENDBLOCK/g, (match, encoded) => {
-                    try {
-                        return decodeURIComponent(escape(atob(encoded)));
-                    } catch (e) {
-                        return match;
-                    }
-                });
-                // 恢复行内公式
-                result = result.replace(/MATHINLINE([A-Za-z0-9+/=]+)ENDINLINE/g, (match, encoded) => {
-                    try {
-                        return decodeURIComponent(escape(atob(encoded)));
-                    } catch (e) {
-                        return match;
-                    }
-                });
-                return result;
-            }
+        // 保护行内公式 $...$
+        text = text.replace(/\$([^\$\n]+?)\$/g, (match, formula) => {
+            this.mathInlines.push('$' + formula + '$');
+            return `MATHINLINE${this.mathInlines.length - 1}ENDINLINE`;
         });
 
-        // 自定义扩展：为标题添加锚点
-        this.converter.addExtension({
-            type: 'lang',
-            regex: /^(#{1,6})\s+(.+)$/gm,
-            replace: (match, level, text) => {
-                const anchor = this.generateAnchor(text);
-                return `${level} <a id="${anchor}" class="anchor" href="#${anchor}"></a>${text}`;
-            }
+        return text;
+    }
+
+    // 恢复 LaTeX 公式
+    restoreMath(text) {
+        // 恢复块级公式
+        text = text.replace(/MATHBLOCK(\d+)ENDBLOCK/g, (match, index) => {
+            return this.mathBlocks[parseInt(index)] || match;
         });
+
+        // 恢复行内公式
+        text = text.replace(/MATHINLINE(\d+)ENDINLINE/g, (match, index) => {
+            return this.mathInlines[parseInt(index)] || match;
+        });
+
+        return text;
     }
 
     // 生成锚点 ID
@@ -225,7 +245,9 @@ class PaperExpress {
         this.renderMetadata(metadata);
 
         // 渲染 Markdown 内容
-        const html = this.converter.makeHtml(content);
+        const protectedContent = this.protectMath(content);
+        let html = marked.parse(protectedContent);
+        html = this.restoreMath(html);
         const contentEl = document.getElementById('markdown-content');
         contentEl.innerHTML = html;
 
@@ -281,6 +303,21 @@ class PaperExpress {
         });
     }
 
+    // 关闭所有已展开的note
+    closeAllExpandedNotes(exceptNoteEl) {
+        const expandedNotes = document.querySelectorAll('.paper-note.expanded');
+        expandedNotes.forEach(expandedNote => {
+            if (expandedNote !== exceptNoteEl) {
+                expandedNote.classList.remove('expanded');
+                const noteId = expandedNote.dataset.noteId;
+                const expandEl = document.getElementById(noteId);
+                if (expandEl) {
+                    expandEl.style.display = 'none';
+                }
+            }
+        });
+    }
+
     // 切换标注展开/收起
     async toggleNote(noteEl) {
         const noteId = noteEl.dataset.noteId;
@@ -290,15 +327,18 @@ class PaperExpress {
         
         if (expandEl) {
             if (expandEl.style.display === 'none') {
+                this.closeAllExpandedNotes(noteEl);
                 expandEl.style.display = 'block';
                 noteEl.classList.add('expanded');
             } else {
                 expandEl.style.display = 'none';
                 noteEl.classList.remove('expanded');
+                noteEl.scrollIntoView({behavior: 'smooth', block: 'center'});
             }
             return;
         }
         
+        this.closeAllExpandedNotes(noteEl);
         noteEl.classList.add('loading');
         
         try {
@@ -346,18 +386,20 @@ class PaperExpress {
         
         const markdown = await response.text();
         const { metadata, content } = this.parseFrontMatter(markdown);
-        
-        const html = this.converter.makeHtml(content);
-        
-        const title = metadata.title || filename;
-        
-        return `
+
+        const protectedContent = this.protectMath(content);
+        let html = marked.parse(protectedContent);
+        html = this.restoreMath(html);
+
+        const title = metadata.title;
+
+        const headerHtml = title ? `
             <div class="paper-note-header">
                 <span class="paper-note-title">${title}</span>
-                <button class="paper-note-close" onclick="this.parentElement.parentElement.style.display='none'; this.parentElement.parentElement.previousElementSibling.classList.remove('expanded');">×</button>
             </div>
-            <div class="paper-note-body">${html}</div>
-        `;
+        ` : '';
+
+        return `${headerHtml}<div class="paper-note-body">${html}</div>`;
     }
 
     // 渲染编者按
@@ -700,10 +742,17 @@ class PaperExpress {
 
     // 渲染数学公式
     renderMath(contentEl) {
-        if (window.MathJax && MathJax.typesetPromise) {
-            MathJax.typesetPromise([contentEl]).catch((err) => console.log('MathJax error:', err));
-        } else if (window.MathJax && MathJax.Hub) {
-            MathJax.Hub.Queue(['Typeset', MathJax.Hub, contentEl]);
+        if (window.renderMathInElement) {
+            renderMathInElement(contentEl, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false,
+                strict: false
+            });
         }
     }
 }

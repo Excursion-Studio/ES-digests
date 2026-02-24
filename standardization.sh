@@ -43,8 +43,6 @@ editor_note: ["编者按第一段", "编者按第二段"]
 digest_pub_time: "2026-02-20"
 ---
 
-# $paper_title
-
 ## 摘要
 
 ## 引言

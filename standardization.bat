@@ -129,8 +129,6 @@ echo editor_note: ["编者按第一段", "编者按第二段"]
 echo digest_pub_time: "2026-02-20"
 echo ---
 echo.
-echo # %paper_title%
-echo.
 echo ## 摘要
 echo.
 echo ## 引言
