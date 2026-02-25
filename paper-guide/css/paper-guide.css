@@ -220,8 +220,27 @@
     max-width: 100%;
     height: auto;
     border-radius: var(--radius);
-    margin: 1.5em 0;
     box-shadow: var(--shadow);
+}
+
+/* 图片容器 - 居中显示 */
+.markdown-body .image-figure {
+    margin: 1.5em 0;
+    text-align: center;
+}
+
+.markdown-body .image-figure img {
+    display: block;
+    margin: 0 auto;
+}
+
+/* 图片标题 */
+.markdown-body .image-figure figcaption {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-top: 0.75em;
+    font-style: italic;
 }
 
 .markdown-body img[src*="#center"] {

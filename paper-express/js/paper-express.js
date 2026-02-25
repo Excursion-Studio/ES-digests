@@ -68,6 +68,29 @@ class PaperExpress {
             return `<h${level}><a id="${anchor}" class="anchor" href="#${anchor}"></a>${text}</h${level}>\n`;
         };
 
+        // 自定义图片渲染 - 居中并添加标题
+        renderer.image = ({ href, title, text }) => {
+            const caption = text || title || '';
+            // 确保图片路径相对于论文根目录
+            const basePath = this.getBasePath();
+            const paperPath = `papers/${this.currentPaper?.filename || ''}`;
+            let imgSrc = href;
+            
+            // 处理相对路径
+            if (href.startsWith('./')) {
+                imgSrc = `${basePath}${paperPath}/${href.substring(2)}`;
+            } else if (!href.startsWith('http') && !href.startsWith('/')) {
+                imgSrc = `${basePath}${paperPath}/${href}`;
+            }
+            
+            return `
+                <figure class="image-figure">
+                    <img src="${imgSrc}" alt="${text}" title="${title || ''}">
+                    ${caption ? `<figcaption>${caption}</figcaption>` : ''}
+                </figure>
+            `;
+        };
+
         marked.use({ renderer });
     }
 
