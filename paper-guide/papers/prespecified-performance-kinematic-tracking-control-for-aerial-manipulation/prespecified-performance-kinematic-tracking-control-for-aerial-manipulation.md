@@ -360,7 +360,7 @@ $$
 
 此外，本文设置了 5s、10s、15s、20s 四组不同的预设时间，开展 21 组重复实验，如图5(d)所示。
 
-![图5(d)：静态点跟踪误差对比（不同预设时间）](imgs/Task_1_tracking_error_in_different_time.png)
+![图5(d)：静态点跟踪误差（不同预设时间）](imgs/Task_1_tracking_error_in_different_time.png)
 
 核心结论为：
 
@@ -386,7 +386,7 @@ $$
 
 ![图6(d)：空中抓取结果](imgs/Task_2_result.png)
 
-![图6(e)：空中抓取任务误差对比](imgs/Task_2_tracking_error.png)
+![图6(e)：空中抓取任务误差](imgs/Task_2_tracking_error.png)
 
 ## 实验 3：轴孔装配（精密作业能力验证）
 

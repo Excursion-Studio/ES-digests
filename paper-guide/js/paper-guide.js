@@ -7,6 +7,7 @@ class PaperGuide {
         this.currentPaper = null;
         this.mathBlocks = [];
         this.mathInlines = [];
+        this.loadComplete = false;
         this.init();
     }
 
@@ -282,8 +283,8 @@ class PaperGuide {
             hljs.highlightElement(block);
         });
 
-        // 渲染数学公式
-        this.renderMath(contentEl);
+        // 渲染数学公式并等待完成后隐藏加载屏幕
+        this.renderMathAndHideLoading(contentEl);
 
         // 生成目录
         this.generateTOC(contentEl);
@@ -778,6 +779,63 @@ class PaperGuide {
             });
         }
     }
+
+    // 渲染数学公式并隐藏加载屏幕
+    renderMathAndHideLoading(contentEl) {
+        const hideLoadingScreen = () => {
+            if (this.loadComplete) return;
+            this.loadComplete = true;
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                loadingScreen.classList.add('hidden');
+            }
+        };
+
+        if (window.renderMathInElement) {
+            try {
+                renderMathInElement(contentEl, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false,
+                    strict: false
+                });
+            } catch (e) {
+                console.warn('Math rendering error:', e);
+            }
+            hideLoadingScreen();
+        } else {
+            const checkKatex = setInterval(() => {
+                if (window.renderMathInElement) {
+                    clearInterval(checkKatex);
+                    clearTimeout(fallbackTimeout);
+                    try {
+                        renderMathInElement(contentEl, {
+                            delimiters: [
+                                {left: '$$', right: '$$', display: true},
+                                {left: '$', right: '$', display: false},
+                                {left: '\\(', right: '\\)', display: false},
+                                {left: '\\[', right: '\\]', display: true}
+                            ],
+                            throwOnError: false,
+                            strict: false
+                        });
+                    } catch (e) {
+                        console.warn('Math rendering error:', e);
+                    }
+                    hideLoadingScreen();
+                }
+            }, 50);
+
+            const fallbackTimeout = setTimeout(() => {
+                clearInterval(checkKatex);
+                hideLoadingScreen();
+            }, 5000);
+        }
+    }
 }
 
 // 初始化
@@ -792,11 +850,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.paperGuide.toggleHighlightTheme(true);
     }
     
-    // 隐藏预加载屏幕
-    setTimeout(() => {
+    // 如果没有加载论文（显示欢迎页面），直接隐藏加载屏幕
+    const urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.get('paper')) {
         const loadingScreen = document.getElementById('loading-screen');
         if (loadingScreen) {
             loadingScreen.classList.add('hidden');
         }
-    }, 500);
+    }
 });
