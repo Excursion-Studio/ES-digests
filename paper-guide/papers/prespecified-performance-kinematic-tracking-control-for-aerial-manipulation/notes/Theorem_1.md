@@ -83,7 +83,7 @@ $$
 
 $$
 \begin{aligned}
-\lVert z \rVert &\leq \lVert \Lambda z_{\int} \rVert + \frac{\delta_E}{\lambda_{min}(K)}
+\lVert z \rVert &\leq \lVert \Lambda z_{\int} \rVert + \frac{\delta_E}{\lambda_{min}(K)} \\
 
 &\leq \frac{(\lambda_{min}(\Lambda) + \lambda_{max}(\Lambda)) \delta_E}{\lambda_{min}(K) \lambda_{min}(\Lambda)} = \delta_z
 \end{aligned}
